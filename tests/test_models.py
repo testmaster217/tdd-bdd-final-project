@@ -113,7 +113,24 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(Decimal(fetched_product.price), product.price)
         self.assertEqual(fetched_product.available, product.available)
         self.assertEqual(fetched_product.category, product.category)
-        
+    
+    def test_update_a_product(self):
+        """It should Update a product in the database"""
+        self.assertEqual(len(Product.all()), 0)
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+        old_id = product.id
+        product.description = "Updated description."
+        product.update()
+        self.assertEqual(product.id, old_id)
+        self.assertEqual(product.description, "Updated description.")
+        products = Product.all()
+        self.assertEqual(len(products), 1)
+        self.assertEqual(products[0].id, old_id)
+        self.assertEqual(products[0].description, "Updated description.")
+
     #
     # ADD YOUR TEST CASES HERE
     #
