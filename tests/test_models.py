@@ -113,7 +113,7 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(Decimal(fetched_product.price), product.price)
         self.assertEqual(fetched_product.available, product.available)
         self.assertEqual(fetched_product.category, product.category)
-    
+
     def test_update_a_product(self):
         """It should Update a product in the database"""
         product = ProductFactory()
@@ -146,7 +146,7 @@ class TestProductModel(unittest.TestCase):
             ProductFactory().create()
         products = Product.all()
         self.assertEqual(len(products), 5)
-    
+
     def test_find_a_product_by_name(self):
         """It should find a product by name"""
         for _ in range(5):
@@ -158,6 +158,30 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found_products.count(), count)
         for product in found_products:
             self.assertEqual(product.name, name)
+
+    def test_find_a_product_by_availability(self):
+        """It should find a product by availability"""
+        for _ in range(10):
+            ProductFactory().create()
+        products = Product.all()
+        available = products[0].available
+        count = len([product for product in products if product.available == available])
+        found_products = Product.find_by_availability(available)
+        self.assertEqual(found_products.count(), count)
+        for product in found_products:
+            self.assertEqual(product.available, available)
+
+    def test_find_a_product_by_category(self):
+        """It should find a product by category"""
+        for _ in range(10):
+            ProductFactory().create()
+        products = Product.all()
+        category = products[0].category
+        count = len([product for product in products if product.category == category])
+        found_products = Product.find_by_category(category)
+        self.assertEqual(found_products.count(), count)
+        for product in found_products:
+            self.assertEqual(product.category, category)
 
     #
     # ADD YOUR TEST CASES HERE
