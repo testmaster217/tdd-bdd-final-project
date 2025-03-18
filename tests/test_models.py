@@ -214,7 +214,3 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found_products.count(), count)
         for product in found_products:
             self.assertEqual(product.price, price)
-
-    #
-    # ADD YOUR TEST CASES HERE
-    #
