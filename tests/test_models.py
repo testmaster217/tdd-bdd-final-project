@@ -209,7 +209,7 @@ class TestProductModel(unittest.TestCase):
         products = Product.all()
         price = products[0].price
         count = len([product for product in products if product.price == price])
-        formatted_price = " \"" + str(price) + "\" " # Adds characters that should be stripped out by Product.find_by_price().
+        formatted_price = " \"" + str(price) + "\" "  # Adds characters that should be stripped out by Product.find_by_price().
         found_products = Product.find_by_price(formatted_price)
         self.assertEqual(found_products.count(), count)
         for product in found_products:
