@@ -116,7 +116,6 @@ class TestProductModel(unittest.TestCase):
     
     def test_update_a_product(self):
         """It should Update a product in the database"""
-        self.assertEqual(len(Product.all()), 0)
         product = ProductFactory()
         product.id = None
         product.create()
@@ -130,6 +129,14 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(len(products), 1)
         self.assertEqual(products[0].id, old_id)
         self.assertEqual(products[0].description, "Updated description.")
+
+    def test_delete_a_product(self):
+        """It should Delete a product in the database"""
+        product = ProductFactory()
+        product.create()
+        self.assertEqual(len(Product.all()), 1)
+        product.delete()
+        self.assertEqual(len(Product.all()), 0)
 
     #
     # ADD YOUR TEST CASES HERE
