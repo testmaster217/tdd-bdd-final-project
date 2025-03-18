@@ -27,7 +27,7 @@ import os
 import logging
 import unittest
 from decimal import Decimal
-from service.models import Product, Category, db
+from service.models import Product, Category, db, DataValidationError
 from service import app
 from tests.factories import ProductFactory
 
@@ -130,6 +130,13 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(products[0].id, old_id)
         self.assertEqual(products[0].description, "Updated description.")
 
+    def test_update_with_missing_id(self):
+        """It should raise an error when trying to update a product that doesn't have an ID"""
+        product = ProductFactory()
+        product.create()
+        product.id = None
+        self.assertRaises(DataValidationError, product.update)
+
     def test_delete_a_product(self):
         """It should Delete a product in the database"""
         product = ProductFactory()
@@ -182,6 +189,31 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found_products.count(), count)
         for product in found_products:
             self.assertEqual(product.category, category)
+
+    def test_find_a_product_by_price(self):
+        """It should find a product by price"""
+        for _ in range(10):
+            ProductFactory().create()
+        products = Product.all()
+        price = products[0].price
+        count = len([product for product in products if product.price == price])
+        found_products = Product.find_by_price(price)
+        self.assertEqual(found_products.count(), count)
+        for product in found_products:
+            self.assertEqual(product.price, price)
+
+    def test_find_a_product_by_string_price(self):
+        """It should find a product by price when the price is a string"""
+        for _ in range(10):
+            ProductFactory().create()
+        products = Product.all()
+        price = products[0].price
+        count = len([product for product in products if product.price == price])
+        formatted_price = " \"" + str(price) + "\" " # Adds characters that should be stripped out by Product.find_by_price().
+        found_products = Product.find_by_price(formatted_price)
+        self.assertEqual(found_products.count(), count)
+        for product in found_products:
+            self.assertEqual(product.price, price)
 
     #
     # ADD YOUR TEST CASES HERE
