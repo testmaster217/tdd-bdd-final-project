@@ -176,8 +176,24 @@ class TestProductRoutes(TestCase):
         data = response.get_json()
         self.assertIn("was not found", data["message"])
 
-    # (For all of these tests, don't forget to write code to make them pass.)
-    # Test update
+    # ----------------------------------------------------------
+    # TEST UPDATE
+    # ----------------------------------------------------------
+    def test_update_product(self):
+        """It should update the specified existing product"""
+        test_product = self._create_products()[0]
+        test_product.description = "Updated description for routes tests."
+        response = self.client.put(f"{BASE_URL}/{test_product.id}", json=test_product.serialize())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json()["description"], test_product.description)
+
+    def test_update_product_not_found(self):
+        """It should return a 404 error if the product is not found"""
+        test_product = ProductFactory()
+        response = self.client.put(f"{BASE_URL}/0", json=test_product.serialize())
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        self.assertIn("was not found", data["message"])
 
     # Test delete
 
