@@ -139,11 +139,22 @@ def update_product(product_id):
     app.logger.info(f"Product: '{found_product.name} updated successfully.")
     return found_product.serialize(), status.HTTP_200_OK
 
+
 ######################################################################
 # D E L E T E   A   P R O D U C T
 ######################################################################
+@app.route("/products/<product_id>", methods=['DELETE'])
+def delete_product(product_id):
+    """
+    Deletes a Product
+    Thsi endpoint deletes the product with the given ID
+    """
+    app.logger.info(f"Request to Delete a product with id '{product_id}'")
 
+    found_product = Product.find(product_id)
+    if not found_product:
+        abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
 
-#
-# PLACE YOUR CODE TO DELETE A PRODUCT HERE
-#
+    app.logger.info(f"Deleting product: '{found_product.name}")
+    found_product.delete()
+    return "", status.HTTP_204_NO_CONTENT
