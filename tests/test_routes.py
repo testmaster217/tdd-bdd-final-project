@@ -176,9 +176,20 @@ class TestProductRoutes(TestCase):
         data = response.get_json()
         self.assertIn("was not found", data["message"])
 
-    #
-    # ADD YOUR TEST CASES HERE
-    #
+    # (For all of these tests, don't forget to write code to make them pass.)
+    # Test update
+
+    # Test delete
+
+    # Test list all
+
+    # Test find by name
+
+    # Test find by category
+
+    # Test find by availability
+
+    # Test find by price
 
     ######################################################################
     # Utility functions
