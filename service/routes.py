@@ -98,7 +98,7 @@ def list_products():
     """
     Lists all products
     """
-    app.logger.info(f"Request to Retrieve all products")
+    app.logger.info("Request to Retrieve all products")
 
     products = Product.all()
     return [product.serialize() for product in products], status.HTTP_200_OK
