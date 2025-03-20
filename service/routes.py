@@ -91,16 +91,25 @@ def create_products():
 
 
 ######################################################################
-# L I S T   A L L   P R O D U C T S
+# L I S T   P R O D U C T S
 ######################################################################
 @app.route("/products", methods=["GET"])
 def list_products():
     """
-    Lists all products
+    Lists all products, or filters them depending on if a query parameter was passed in
     """
-    app.logger.info("Request to Retrieve all products")
+    app.logger.info("Request a list of products")
 
-    products = Product.all()
+    products = []
+
+    name = request.args.get("name")
+    if name:
+        app.logger.info(f"Find products with name: {name}")
+        products = Product.find_by_name(name)
+    else:
+        app.logger.info("Find all products")
+        products = Product.all()
+
     results = [product.serialize() for product in products]
     app.logger.info(f"Returning {len(results)} products")
     return results, status.HTTP_200_OK
