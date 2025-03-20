@@ -216,7 +216,15 @@ class TestProductRoutes(TestCase):
         data = response.get_json()
         self.assertIn("was not found", data["message"])
 
-    # Test list all
+    # ----------------------------------------------------------
+    # TEST LIST ALL
+    # ----------------------------------------------------------
+    def test_list_all_products(self):
+        """It should get all products"""
+        test_products = self._create_products(5)
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.get_json()), 5)
 
     # Test find by name
 
