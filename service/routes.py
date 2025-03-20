@@ -101,13 +101,15 @@ def list_products():
     app.logger.info("Request to Retrieve all products")
 
     products = Product.all()
-    return [product.serialize() for product in products], status.HTTP_200_OK
+    results = [product.serialize() for product in products]
+    app.logger.info(f"Returning {len(results)} products")
+    return results, status.HTTP_200_OK
 
 
 ######################################################################
 # R E A D   A   P R O D U C T
 ######################################################################
-@app.route("/products/<product_id>", methods=['GET'])
+@app.route("/products/<int:product_id>", methods=['GET'])
 def get_products(product_id):
     """
     Retrieve a single Product
@@ -126,30 +128,29 @@ def get_products(product_id):
 ######################################################################
 # U P D A T E   A   P R O D U C T
 ######################################################################
-@app.route("/products/<product_id>", methods=['PUT'])
+@app.route("/products/<int:product_id>", methods=['PUT'])
 def update_product(product_id):
     """
     Updates a Product
     Thsi endpoint updates the product with the given ID using the data from the request body
     """
     app.logger.info(f"Request to Update a product with id '{product_id}'")
+    check_content_type("application/json")
 
     found_product = Product.find(product_id)
     if not found_product:
         abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
 
-    app.logger.info(f"Updating product: '{found_product.name}")
     data = request.get_json()
     found_product.deserialize(data)
     found_product.update()
-    app.logger.info(f"Product: '{found_product.name} updated successfully.")
     return found_product.serialize(), status.HTTP_200_OK
 
 
 ######################################################################
 # D E L E T E   A   P R O D U C T
 ######################################################################
-@app.route("/products/<product_id>", methods=['DELETE'])
+@app.route("/products/<int:product_id>", methods=['DELETE'])
 def delete_product(product_id):
     """
     Deletes a Product
@@ -158,9 +159,6 @@ def delete_product(product_id):
     app.logger.info(f"Request to Delete a product with id '{product_id}'")
 
     found_product = Product.find(product_id)
-    if not found_product:
-        abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
-
-    app.logger.info(f"Deleting product: '{found_product.name}")
-    found_product.delete()
+    if found_product:
+        found_product.delete()
     return "", status.HTTP_204_NO_CONTENT

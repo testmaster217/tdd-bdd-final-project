@@ -200,21 +200,19 @@ class TestProductRoutes(TestCase):
     # ----------------------------------------------------------
     def test_delete_product(self):
         """It should delete the specified existing product"""
-        # Create a product
-        test_product = self._create_products()[0]
+        # Create several products
+        test_products = self._create_products(5)
+        initial_count = self.get_product_count()
+        test_product = test_products[0]
         # Delete the product and assert that the request was successful
         response = self.client.delete(f"{BASE_URL}/{test_product.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
         # Try to get the product and assert that it is gone
         response = self.client.get(f"{BASE_URL}/{test_product.id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_delete_product_not_found(self):
-        """It should return a 404 error if the product is not found"""
-        response = self.client.delete(f"{BASE_URL}/0")
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        data = response.get_json()
-        self.assertIn("was not found", data["message"])
+        # Check if the count of products is one less than it started as
+        self.assertEqual(self.get_product_count(), initial_count - 1)
 
     # ----------------------------------------------------------
     # TEST LIST ALL
@@ -226,7 +224,9 @@ class TestProductRoutes(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.get_json()), 5)
 
-    # Test find by name
+    # ----------------------------------------------------------
+    # TEST FIND BY NAME
+    # ----------------------------------------------------------
 
     # Test find by category
 
