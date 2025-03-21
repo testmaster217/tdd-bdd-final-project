@@ -278,6 +278,17 @@ class TestProductRoutes(TestCase):
     # ----------------------------------------------------------
     # TEST FIND BY PRICE
     # ----------------------------------------------------------
+    def test_list_products_by_price(self):
+        """It should get a list of products with the given availability"""
+        products = self._create_products(10)
+        test_price = products[0].price
+        test_price_count = len([product for product in products if product.price == test_price])
+        response = self.client.get(BASE_URL, query_string=f"price={test_price}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), test_price_count)
+        for product in data:
+            self.assertEqual(product["price"], str(test_price))
 
     ######################################################################
     # Utility functions
