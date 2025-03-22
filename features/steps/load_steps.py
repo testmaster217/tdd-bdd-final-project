@@ -51,7 +51,7 @@ def step_impl(context):
             "name": row["name"],
             "description": row["description"],
             "price": row["price"],
-            "available": row["available"],
+            "available": row["available"].lower() in ["true", "1", "yes"],
             "category": row["category"]
         }
         context.resp = requests.post(rest_endpoint, json=payload)
