@@ -111,3 +111,14 @@ Scenario: Search Products by category
     And I not should see "Hat" in the results
     And I not should see "Shoes" in the results
     And I not should see "Sheets" in the results
+
+Scenario: Search Products by availability
+    When I visit the "Home Page"
+    And I press the "Clear" button
+    And I select "True" in the "Available" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the results
+    And I should see "Big Mac" in the results
+    And I should see "Sheets" in the results
+    And I not should see "Shoes" in the results
