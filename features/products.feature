@@ -108,9 +108,9 @@ Scenario: Search Products by category
     And I press the "Search" button
     Then I should see the message "Success"
     And I should see "Big Mac" in the results
-    And I not should see "Hat" in the results
-    And I not should see "Shoes" in the results
-    And I not should see "Sheets" in the results
+    And I should not see "Hat" in the results
+    And I should not see "Shoes" in the results
+    And I should not see "Sheets" in the results
 
 Scenario: Search Products by availability
     When I visit the "Home Page"
@@ -121,7 +121,7 @@ Scenario: Search Products by availability
     And I should see "Hat" in the results
     And I should see "Big Mac" in the results
     And I should see "Sheets" in the results
-    And I not should see "Shoes" in the results
+    And I should not see "Shoes" in the results
 
 Scenario: Search Products by name
     When I visit the "Home Page"
